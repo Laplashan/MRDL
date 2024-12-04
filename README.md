@@ -23,44 +23,29 @@ _Tools, documentation and background of our datalogger._
 
 ## Introduction
 
-_Welcome everyone:wave:_
+_Welcome everyone_
 
 MRDL was born from the necessity of getting a better undarstanding of the dynamics of our car. The motivation behind this repository is an exploration into the world of DIY electronics, the end goal being to create a functional prototype that can be permanently mounted on our MR23C.
-The data logging system consists of four key aspects:
+The data logging system consists of 3 key aspects:
+
 Firmware, this program is flashed onto the micro-controller so as to control its general operation and communicate with the server software.
+
 Server software, this program exposes various API endpoints which handle hardware registration, configuration and telemetry.
+
 Client software, this program is the source code for a web based interface for hardware reporting and configuration. (Currently using Blynk)
 
 ## Objective and needs (Constantly updating)
 
 To get a better understanding of our car we need to be able to read data from various sectors, wich can include temperature, speed, position, acceleration, impacts, etc.
-In this section, we´ll add a quick list mencioning de key spots to get data from, and what sensor/implement can be used to get data 
-2. Navigate to the **< > Code** tab in the header menu of your repository.
+In this section, we´ll add a quick list mencioning the key spots to get data from, and what sensor/implement can be used to get that data as well as if its covered or not.
 
-   ![code-tab](/images/code-tab.png)
+1. Speed | GPS sensor | Status: Completed. | Mounted anywhere on the car.
+     ![speed](/images/speedgraphs.jpg)
+2. Position tracking | GPS sensor | Status: Partially completed (Issues w/ Blynk cloud) | Mounted anywhere on the car.
+3. Engine RPM | Sensing Coil | Status: 50% completed | Mounted arround the sparkplug cable of the engine.
+4. Suspension shock dynamics | Unknown | Status: 0% | -
+5. Reductor temp. | Thermocouple XS 168 or similar | Status: Partially completed, prog. completed, sensor unmounted | Bolted directly on the reductor.
 
-3. Click on the **main** branch drop-down.
-
-   ![main-branch-dropdown](/images/main-branch-dropdown.png)
-
-4. In the field, name your branch `my-first-branch`. In this case, the name must be `my-first-branch` to trigger the course workflow.
-5. Click **Create branch: my-first-branch** to create your branch.
-
-   ![create-branch-button](/images/create-branch-button.png)
-
-   The branch will automatically switch to the one you have just created.
-   The **main** branch drop-down bar will reflect your new branch and display the new branch name.
-
-6. Wait about 20 seconds then refresh this page (the one you're following instructions from). [GitHub Actions](https://docs.github.com/en/actions) will automatically update to the next step.
-
-<footer>
-
-<!--
-  <<< Author notes: Footer >>>
-  Add a link to get support, GitHub status page, code of conduct, license link.
--->
-
----
 
 Get help: [Post in our discussion board](https://github.com/orgs/skills/discussions/categories/introduction-to-github) &bull; [Review the GitHub status page](https://www.githubstatus.com/)
 
