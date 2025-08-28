@@ -40,9 +40,9 @@ To get a better understanding of our car we need to be able to read data from va
 In this section, we´ll add a quick list mencioning the key spots to get data from, and what sensor/implement can be used to get that data as well as if its covered or not.
 
 1. Speed | GPS sensor | Status: Completed. | Mounted anywhere on the car.
-     ![speed](/images/speedgraphs.jpg)
+     ![speed](/docs/images/gps_speedgraphs_sample.jpg)
 2. Position tracking | GPS sensor | Status: Partially completed (Issues w/ Blynk cloud) | Mounted anywhere on the car.
-3. Engine RPM | Sensing Coil | Status: 50% completed | Mounted arround the sparkplug cable of the engine.
+3. Engine RPM | Hall Effect | Status: 90% completed | Running in an Arduino board and sent thorugh Serial
 4. Suspension shock dynamics | Unknown | Status: 0% | -
 5. Reductor temp. | Thermocouple XS 168 or similar | Status: Partially completed, prog. completed, sensor unmounted | Bolted directly on the reductor.
 
