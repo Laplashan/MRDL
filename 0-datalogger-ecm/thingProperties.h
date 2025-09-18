@@ -3,26 +3,22 @@
 #include <ArduinoIoTCloud.h>
 #include <Arduino_ConnectionHandler.h>
 
-const char DEVICE_LOGIN_NAME[]  = "0bce3064-fae3-4c5c-a43d-5e78502f36d1";
+const char DEVICE_LOGIN_NAME[]  = "974c58f0-ae89-4215-b772-a5bd730c162c";
 
 const char SSID[]               = SECRET_SSID;    // Network SSID (name)
 const char PASS[]               = SECRET_OPTIONAL_PASS;    // Network password (use for WPA, or use as key for WEP)
 const char DEVICE_KEY[]  = SECRET_DEVICE_KEY;    // Secret device password
 
 
-float latitude;
-float longitude;
-float rpm;
-float velocity;
+float rpm_eng;
+float rpm_gbx;
 
 void initProperties(){
 
   ArduinoCloud.setBoardId(DEVICE_LOGIN_NAME);
   ArduinoCloud.setSecretDeviceKey(DEVICE_KEY);
-  ArduinoCloud.addProperty(latitude, READ, ON_CHANGE, NULL);
-  ArduinoCloud.addProperty(longitude, READ, ON_CHANGE, NULL);
-  ArduinoCloud.addProperty(rpm, READ, ON_CHANGE, NULL);
-  ArduinoCloud.addProperty(velocity, READ, ON_CHANGE, NULL);
+  ArduinoCloud.addProperty(rpm_eng, READ, 1 * SECONDS, NULL);
+  ArduinoCloud.addProperty(rpm_gbx, READ, 1 * SECONDS, NULL);
 
 }
 
