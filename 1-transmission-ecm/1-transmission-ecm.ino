@@ -1,37 +1,59 @@
 #include <SoftwareSerial.h>
+#include <TinyGPS++.h>
 
-// Ya sirven las interrupciones con freq de sampleo maxima de 90 hz
-// Probado con un simulador embedido: motor_sim
-// Hay que probar con el verdadero motor
-// Crear una rutina de guardado en una memoria sim mientras llega el radiofrequencia
+// =======================
+// CONFIGURACIÓN DE PINES
+// =======================
 
-unsigned int ten_ms_sample = 0;
+// GPS
+#define GPS_RX 4       // GPS recibe datos del Arduino (TX)
+#define GPS_TX 5       // GPS envía datos al Arduino (RX)
+SoftwareSerial gpsSerial(GPS_TX, GPS_RX); // RX, TX invertidos para SoftwareSerial
+
+// Comunicación serial adicional
+SoftwareSerial mySerial(7, 8); // Pin 7 (RX), Pin 8 (TX)
+
+// Sensores de RPM
+#define MotorPin 2       // Pin D2: interrupción externa INT0
+#define GearboxPin 3     // Pin D3: interrupción externa INT1
+
+// =======================
+// VARIABLES GLOBALES
+// =======================
+
+TinyGPSPlus gps;
+
+const int pulse_per_rev = 8;
+const int sample_time = 200;
+
 int rpm_motor_count = 0;
 int rpm_gearbox_count = 0;
-int pulse_per_rev = 8;
 int ten_ms_counter = 0;
-const int sample_time = 200; // 200 ms
+
 float rpm_motor = 0;
 float rpm_gearbox = 0;
+
 bool ten_ms_counter_flag = false;
 bool motor_sim = false;
-bool rpm_motor_interrflag = false;
-bool rpm_gearbox_interrflag = false;
 
-#define MotorPin 2
-#define GearboxPin 3
-
-// Create SoftwareSerial object on pin 8 (TX), pin 7 (RX not used)
-SoftwareSerial mySerial(7, 8); // RX, TX
+// =======================
+// CONFIGURACIÓN INICIAL
+// =======================
 
 void setup() {
+  // Pines de simulación
   pinMode(9, OUTPUT);
   pinMode(10, OUTPUT);
+
+
+  // Pines de entrada
   pinMode(MotorPin, INPUT);
   pinMode(GearboxPin, INPUT);
 
-  Serial.begin(9600);      // USB serial
-  mySerial.begin(9600);    // Software serial on pin 8
+  // Inicializar comunicaciones
+  Serial.begin(9600);       // USB
+  mySerial.begin(9600);     // Comunicación por pin 8
+  gpsSerial.begin(9600);    // GPS
 
   // Configurar Timer2
   SREG &= 0b01111111; // Deshabilitar interrupciones
@@ -44,35 +66,62 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(GearboxPin), rpm_gearbox_interrupt, RISING);
 }
 
+// =======================
+// BUCLE PRINCIPAL
+// =======================
+
 void loop() {
+  // Leer datos del GPS
+  while (gpsSerial.available() > 0) {
+    gps.encode(gpsSerial.read());
+  }
+
+  // Si se cumplió el tiempo de muestreo
   if (ten_ms_counter_flag) {
-    // Print to USB serial
+    float lat = gps.location.isValid() ? gps.location.lat() : 0.0;
+    float lng = gps.location.isValid() ? gps.location.lng() : 0.0;
+
+    // Enviar por USB
     Serial.print(millis());
     Serial.print(",");
     Serial.print(rpm_motor);
     Serial.print(",");
-    Serial.println(rpm_gearbox); 
+    Serial.print(rpm_gearbox);
+    Serial.print(",");
+    Serial.print(lat, 6);
+    Serial.print(",");
+    Serial.println(lng, 6);
 
-    // Print to pin 8 serial
+    // Enviar por pin 8
     mySerial.print(millis());
     mySerial.print(",");
     mySerial.print(rpm_motor);
     mySerial.print(",");
-    mySerial.println(rpm_gearbox); 
+    mySerial.print(rpm_gearbox);
+    mySerial.print(",");
+    mySerial.print(lat, 6);
+    mySerial.print(",");
+    mySerial.println(lng, 6);
 
     ten_ms_counter_flag = false;
   }
 }
 
+// =======================
+// INTERRUPCIONES DE RPM
+// =======================
+
 void rpm_motor_interrupt() {
-  rpm_motor_interrflag = true;
   rpm_motor_count++;
 }
 
 void rpm_gearbox_interrupt() {
-  rpm_gearbox_interrflag = true;
   rpm_gearbox_count++;
 }
+
+// =======================
+// INTERRUPCIÓN DEL TIMER
+// =======================
 
 ISR(TIMER2_OVF_vect) {
   motor_sim = !motor_sim;
