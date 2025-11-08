@@ -12,13 +12,20 @@ const char DEVICE_KEY[]  = SECRET_DEVICE_KEY;    // Secret device password
 
 float rpm_eng;
 float rpm_gbx;
+float latitude;
+float longitude;
+CloudLocation gpsLocation;
 
 void initProperties(){
 
   ArduinoCloud.setBoardId(DEVICE_LOGIN_NAME);
   ArduinoCloud.setSecretDeviceKey(DEVICE_KEY);
+
   ArduinoCloud.addProperty(rpm_eng, READ, 1 * SECONDS, NULL);
   ArduinoCloud.addProperty(rpm_gbx, READ, 1 * SECONDS, NULL);
+  ArduinoCloud.addProperty(latitude, READ, 1 * SECONDS, NULL);
+  ArduinoCloud.addProperty(longitude, READ, 1 * SECONDS, NULL);
+  ArduinoCloud.addProperty(gpsLocation, READ, 1 * SECONDS, NULL);
 
 }
 
